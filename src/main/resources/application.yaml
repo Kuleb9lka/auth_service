@@ -1,1 +1,17 @@
-spring.application.name=auth_service
+server:
+  port: 8080
+
+jwt:
+  secret: sdsdg734fsjhfuseyfgsgdfgdfgdfg345;4l35k34;lk53;4lk5
+  access-expiration-time: 3600000
+  refresh-expiration-time: 604800000
+
+logging:
+  file:
+    name: logs/app.log
+  level:
+    org.springframework.security: DEBUG
+
+spring:
+  application:
+    name: auth-service
