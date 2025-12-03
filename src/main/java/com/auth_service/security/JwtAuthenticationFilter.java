@@ -1,6 +1,6 @@
 package com.auth_service.security;
 
-import com.auth_service.security.model.CustomUserDetails;
+import com.auth_service.dto.security.CustomUserDetails;
 import com.auth_service.security.service.JwtService;
 import com.auth_service.security.service.impl.CustomUserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;

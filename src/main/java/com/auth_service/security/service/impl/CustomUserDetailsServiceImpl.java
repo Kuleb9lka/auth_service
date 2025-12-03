@@ -1,9 +1,8 @@
 package com.auth_service.security.service.impl;
 
 import com.auth_service.dto.UserAuthDto;
-import com.auth_service.dto.UserResponseDto;
 import com.auth_service.exception.UserNotFoundException;
-import com.auth_service.security.model.CustomUserDetails;
+import com.auth_service.dto.security.CustomUserDetails;
 import com.auth_service.service.UserServiceClient;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
