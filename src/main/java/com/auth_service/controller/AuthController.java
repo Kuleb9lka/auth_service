@@ -1,8 +1,8 @@
 package com.auth_service.controller;
 
 import com.auth_service.dto.UserRegisterDto;
-import com.auth_service.security.model.AuthRequest;
-import com.auth_service.security.model.AuthResponse;
+import com.auth_service.dto.security.AuthRequest;
+import com.auth_service.dto.security.AuthResponse;
 import com.auth_service.security.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,12 @@
 package com.auth_service.security.service;
 
 import com.auth_service.constant.SecurityConstant;
-import com.auth_service.security.model.CustomUserDetails;
+import com.auth_service.dto.security.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class JwtService {
 
     @Value("${jwt.secret}")
@@ -35,6 +37,9 @@ public class JwtService {
     }
 
     private Date extractExpiration(String token) {
+
+        log.info("Expiration extraction");
+
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY.getBytes())
                 .build()
@@ -44,6 +49,8 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
+
+        log.info("All claims extraction");
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
@@ -56,6 +63,8 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
+
+        log.info("Check token expiration");
         return extractExpiration(token).before(new Date());
     }
 

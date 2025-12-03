@@ -1,4 +1,4 @@
-package com.auth_service.security.model;
+package com.auth_service.dto.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

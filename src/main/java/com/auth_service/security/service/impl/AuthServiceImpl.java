@@ -8,14 +8,15 @@ import com.auth_service.exception.ExternalAuthServiceException;
 import com.auth_service.exception.InvalidRefreshTokenException;
 import com.auth_service.exception.UserNotFoundException;
 import com.auth_service.mapper.UserMapper;
-import com.auth_service.security.model.AuthRequest;
-import com.auth_service.security.model.AuthResponse;
-import com.auth_service.security.model.CustomUserDetails;
+import com.auth_service.dto.security.AuthRequest;
+import com.auth_service.dto.security.AuthResponse;
+import com.auth_service.dto.security.CustomUserDetails;
 import com.auth_service.security.service.AuthService;
 import com.auth_service.security.service.JwtService;
 import com.auth_service.service.UserServiceClient;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -96,6 +98,8 @@ public class AuthServiceImpl implements AuthService {
 
     private AuthResponse generateTokens(CustomUserDetails customUserDetails) {
 
+        log.info("Token generation");
+
         String accessToken = jwtService.generateToken(customUserDetails, ACCESS_TOKEN_EXPIRATION_TIME);
         String refreshToken = jwtService.generateToken(customUserDetails, REFRESH_TOKEN_EXPIRATION_TIME);
 
@@ -103,6 +107,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Authentication getAuthentication(String login, String password) {
+
+        log.info("Getting authentication");
 
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(login, password)

@@ -7,10 +7,10 @@ jwt:
   refresh-expiration-time: 604800000
 
 logging:
-  file:
-    name: logs/app.log
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
   level:
-    org.springframework.security: DEBUG
+    root: info
 
 spring:
   application:
