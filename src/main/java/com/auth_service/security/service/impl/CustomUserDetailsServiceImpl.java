@@ -6,6 +6,7 @@ import com.auth_service.dto.security.CustomUserDetails;
 import com.auth_service.service.UserServiceClient;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +16,7 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserServiceClient userServiceClient;
@@ -26,11 +28,17 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
         UserAuthDto byUsername;
 
         try {
+
+            log.info("Trying to get user by username^ {}", username);
+
             byUsername = userServiceClient.getByUsername(username);
+
         } catch (FeignException.NotFound e) {
 
             throw new UserNotFoundException(e.getMessage());
         }
+
+        log.info("User was successfully found");
 
         return new CustomUserDetails(
                 byUsername.getUsername(),

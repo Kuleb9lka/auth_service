@@ -10,6 +10,9 @@ logging:
   pattern:
     console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
   level:
+    org.springframework.security: info
+    org.springframework.security.web.FilterChainProxy: debug
+    org.springframework.security.web.org.springframework.security.web.authentication: trace
     root: info
 
 spring:
