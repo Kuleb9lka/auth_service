@@ -35,8 +35,6 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
         } catch (FeignException.NotFound e) {
 
-            log.info("User was not found by username: {}", username);
-
             throw new UserNotFoundException(e.getMessage());
         }
 
