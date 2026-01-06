@@ -19,14 +19,14 @@
         <jjwt.api.version>0.11.5</jjwt.api.version>
         <jjwt.impl.version>0.11.5</jjwt.impl.version>
         <jjwt.jackson.version>0.11.5</jjwt.jackson.version>
-        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.12.0</maven.compiler.plugin.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <mapstruct.version>1.5.5.final</mapstruct.version>
-        <mapstruct.processor.version>1.5.5.final</mapstruct.processor.version>
-        <springdoc.version>1.7.0</springdoc.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <mapstruct.processor.version>1.5.5.Final</mapstruct.processor.version>
         <spring.openfeign.version>4.3.0</spring.openfeign.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <springdoc.openapi.version>2.5.0</springdoc.openapi.version>
     </properties>
 
     <dependencies>
@@ -108,8 +108,8 @@
 
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>${springdoc.version}</version>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.openapi.version}</version>
         </dependency>
 
         <dependency>
@@ -157,6 +157,10 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
