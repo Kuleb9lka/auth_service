@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "user-service")
 public interface UserClient {
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     UserResponseDto getById(@PathVariable("id") Long id);
 
-    @GetMapping("/auth")
+    @GetMapping("/users/by-username")
     UserAuthDto getByUsername(@RequestParam("username") String username);
 
-    @PostMapping
+    @PostMapping("/users/new")
     UserResponseDto create(@RequestBody UserRequestDto userRequestDto);
 }
 
