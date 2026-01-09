@@ -3,18 +3,17 @@ package com.auth_service.security.service.impl;
 import com.auth_service.constant.ExceptionConstant;
 import com.auth_service.dto.UserRegisterDto;
 import com.auth_service.dto.UserRequestDto;
+import com.auth_service.dto.security.AuthRequest;
+import com.auth_service.dto.security.AuthResponse;
+import com.auth_service.dto.security.CustomUserDetails;
 import com.auth_service.enums.UserRole;
 import com.auth_service.exception.ExternalAuthServiceException;
 import com.auth_service.exception.InvalidRefreshTokenException;
 import com.auth_service.exception.RegistrationDetailsConflictException;
-import com.auth_service.exception.UserNotFoundException;
 import com.auth_service.mapper.UserMapper;
-import com.auth_service.dto.security.AuthRequest;
-import com.auth_service.dto.security.AuthResponse;
-import com.auth_service.dto.security.CustomUserDetails;
 import com.auth_service.security.service.AuthService;
 import com.auth_service.security.service.JwtService;
-import com.auth_service.service.UserServiceClient;
+import com.auth_service.service.UserClientService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${jwt.refresh-expiration-time}")
     private Integer REFRESH_TOKEN_EXPIRATION_TIME;
-    private final UserServiceClient userServiceClient;
+    private final UserClientService userClientService;
 
     private final UserMapper userMapper;
 
@@ -50,8 +49,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse register(UserRegisterDto registerDto) {
 
-        String uncachedPassword = registerDto.getPassword();
-
         registerDto.setPassword(encoder.encode(registerDto.getPassword()));
 
         UserRequestDto userRequestDto = userMapper.toUserRequestDto(registerDto);
@@ -62,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
 
             log.info("Trying to create a user");
 
-            userServiceClient.create(userRequestDto);
+            userClientService.create(userRequestDto);
 
         } catch (FeignException.Conflict e) {
 
@@ -75,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("Getting custom user details for username: {}", registerDto.getUsername());
 
-        CustomUserDetails customUserDetails = (CustomUserDetails) getAuthentication(registerDto.getUsername(), uncachedPassword).getPrincipal();
+        CustomUserDetails customUserDetails = userDetailsService.loadUserByUsername(registerDto.getUsername());
 
         log.info("Generating access and refresh tokens");
 
@@ -123,9 +120,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Authentication getAuthentication(String login, String password) {
+
         log.debug("Attempting to authenticate user: {}", login);
-        return authenticationManager.authenticate(
+
+        Authentication userAuthentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(login, password)
         );
+
+        log.info("Authentication was successfully got");
+
+        return userAuthentication;
     }
 }

@@ -4,13 +4,13 @@ import com.auth_service.dto.UserAuthDto;
 import com.auth_service.dto.UserRequestDto;
 import com.auth_service.dto.UserResponseDto;
 import com.auth_service.feignclient.UserClient;
-import com.auth_service.service.UserServiceClient;
+import com.auth_service.service.UserClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceClientImpl implements UserServiceClient {
+public class UserClientServiceImpl implements UserClientService {
 
     private final UserClient userClient;
 
