@@ -1,7 +1,7 @@
 package com.auth_service.security.service.impl;
 
 import com.auth_service.dto.UserAuthDto;
-import com.auth_service.exception.UserNotFoundException;
+import com.auth_service.exception.user_service.UserNotFoundException;
 import com.auth_service.dto.security.CustomUserDetails;
 import com.auth_service.service.UserClientService;
 import feign.FeignException;
@@ -29,7 +29,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
         try {
 
-            log.info("Trying to get user by username^ {}", username);
+            log.info("Trying to get user by username: {}", username);
 
             byUsername = userClientService.getByUsername(username);
 
