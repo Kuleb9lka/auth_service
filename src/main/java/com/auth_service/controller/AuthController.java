@@ -1,15 +1,18 @@
 package com.auth_service.controller;
 
-import com.auth_service.dto.UserRegisterDto;
+import com.auth_service.dto.UserRequestDto;
 import com.auth_service.dto.security.AuthRequest;
 import com.auth_service.dto.security.AuthResponse;
 import com.auth_service.security.service.AuthService;
+import com.auth_service.service.UserClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,8 +22,10 @@ public class AuthController {
 
     private final AuthService authService;
 
+    private final UserClientService userClientService;
+
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> registration(@RequestBody UserRegisterDto dto) {
+    public ResponseEntity<AuthResponse> registration(@RequestBody UserRequestDto dto) {
 
         return ResponseEntity.ok(authService.register(dto));
     }
@@ -35,5 +40,11 @@ public class AuthController {
     public ResponseEntity<AuthResponse> refresh(@RequestHeader("Refresh-Token") String refreshToken) {
 
         return ResponseEntity.ok(authService.refreshToken(refreshToken));
+    }
+
+    @GetMapping("/confirm-email")
+    public void confirmEmail(@RequestParam("token") String token) {
+
+        userClientService.verifyUserEmail(token);
     }
 }
