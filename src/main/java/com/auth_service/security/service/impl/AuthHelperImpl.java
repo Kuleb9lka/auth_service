@@ -23,8 +23,8 @@ public class AuthHelperImpl implements AuthHelper {
     }
 
     @Override
-    public String constructEmailTextWithUrl(String mailText, String token){
+    public String constructEmailTextWithUrl(String mailText, String reconfirmationUrl){
 
-        return String.format(mailText, constructEmailConfirmationUrl(token));
+        return String.format(mailText, reconfirmationUrl);
     }
 }

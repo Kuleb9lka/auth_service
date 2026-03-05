@@ -31,7 +31,7 @@ public interface UserClient {
     @GetMapping("/users/generate-token/{userId}")
     String generateEmailVerificationToken(@PathVariable Long userId);
 
-    @GetMapping("/users/confirm-email/{token}")
+    @GetMapping("/users/verify-email/{token}")
     void verifyUserEmail(@PathVariable String token);
 
 
