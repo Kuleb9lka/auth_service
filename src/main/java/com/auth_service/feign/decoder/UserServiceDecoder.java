@@ -12,6 +12,7 @@ import com.auth_service.exception.user_service.UserServiceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +20,10 @@ import java.io.InputStream;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceDecoder implements ErrorDecoder {
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
+    private final ObjectMapper mapper;
 
     @Override
     public Exception decode(String s, Response response) {
