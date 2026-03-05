@@ -18,6 +18,23 @@ logging:
 spring:
   application:
     name: ${APPLICATION_NAME:auth-service}
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        linger.ms: 10
+        enable.idempotence: true
+    topics:
+      mailing: mailing
+
+
+
+app:
+  public-url: https://auth-service
 
 eureka:
   instance:

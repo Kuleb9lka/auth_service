@@ -1,9 +1,7 @@
 package com.auth_service.dto;
 
-import com.auth_service.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,14 +26,8 @@ public class UserRequestDto {
     @Size(message = "Lastname must be in range > 2 & < 50", min = 2, max = 50)
     private String lastname;
 
-    @Email(message = "Invalid email format.")
     @NotBlank(message = "Email can't be null or blank.")
+    @Email(message = "Invalid email format.")
     @Size(message = "Email must be in range > 5 & < 100", min = 5, max = 100)
     private String email;
-
-    @NotNull(message = "Role can't be null.")
-    private UserRole role;
-
-    @NotNull(message = "Is active can't be null.")
-    private Boolean isActive;
 }

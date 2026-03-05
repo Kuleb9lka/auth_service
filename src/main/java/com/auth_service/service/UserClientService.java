@@ -8,5 +8,11 @@ public interface UserClientService {
 
     UserAuthDto getByUsername(String username);
 
-    UserResponseDto create(UserRequestDto requestDto);
+    UserResponseDto createUser(UserRequestDto requestDto);
+
+    String generateEmailConfirmationToken(Long id);
+
+    UserResponseDto getUserByConfirmationToken(String token);
+
+    void verifyUserEmail(String token);
 }

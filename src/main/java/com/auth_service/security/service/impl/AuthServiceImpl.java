@@ -1,20 +1,19 @@
 package com.auth_service.security.service.impl;
 
+import com.auth_service.constant.AuthConstant;
 import com.auth_service.constant.ExceptionConstant;
-import com.auth_service.dto.UserRegisterDto;
+import com.auth_service.dto.MailDto;
 import com.auth_service.dto.UserRequestDto;
+import com.auth_service.dto.UserResponseDto;
 import com.auth_service.dto.security.AuthRequest;
 import com.auth_service.dto.security.AuthResponse;
 import com.auth_service.dto.security.CustomUserDetails;
-import com.auth_service.enums.UserRole;
-import com.auth_service.exception.ExternalAuthServiceException;
 import com.auth_service.exception.InvalidRefreshTokenException;
-import com.auth_service.exception.RegistrationDetailsConflictException;
-import com.auth_service.mapper.UserMapper;
+import com.auth_service.producer.MailProducer;
+import com.auth_service.security.service.AuthHelper;
 import com.auth_service.security.service.AuthService;
 import com.auth_service.security.service.JwtService;
 import com.auth_service.service.UserClientService;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     private Integer REFRESH_TOKEN_EXPIRATION_TIME;
     private final UserClientService userClientService;
 
-    private final UserMapper userMapper;
+    private final AuthHelper authHelper;
 
     private final PasswordEncoder encoder;
 
@@ -46,33 +45,39 @@ public class AuthServiceImpl implements AuthService {
 
     private final CustomUserDetailsServiceImpl userDetailsService;
 
+    private final MailProducer mailProducer;
+
     @Override
-    public AuthResponse register(UserRegisterDto registerDto) {
+    public AuthResponse register(UserRequestDto requestDto) {
 
-        registerDto.setPassword(encoder.encode(registerDto.getPassword()));
+        log.info("Encoding password");
 
-        UserRequestDto userRequestDto = userMapper.toUserRequestDto(registerDto);
+        requestDto.setPassword(encoder.encode(requestDto.getPassword()));
 
-        userRequestDto.setRole(UserRole.USER);
+        log.info("Trying to create a user");
 
-        try {
+        UserResponseDto createdUser = userClientService.createUser(requestDto);
 
-            log.info("Trying to create a user");
+        log.info("User was created successfully");
 
-            userClientService.create(userRequestDto);
+        log.info("Trying to generate confirmation token email: {}", createdUser.getEmail());
 
-        } catch (FeignException.Conflict e) {
+        String emailVerificationToken = userClientService.generateEmailConfirmationToken(createdUser.getId());
 
-            throw new RegistrationDetailsConflictException(e.getMessage());
+        log.info("Confirmation token was successfully generated");
 
-        } catch (FeignException e) {
+        log.info("Trying to send confirmation mail");
 
-            throw new ExternalAuthServiceException(ExceptionConstant.AUTHENTICATION_SERVICE_UNAVAILABLE);
-        }
+        mailProducer.sendMail(constructMail(
+                createdUser.getEmail(),
+                AuthConstant.REGISTRATION_THEME,
+                authHelper.constructEmailTextWithUrl(AuthConstant.REGISTRATION_MAIL_TEXT, emailVerificationToken)));
 
-        log.info("Getting custom user details for username: {}", registerDto.getUsername());
+        log.info("Confirmation mail was successfully sent");
 
-        CustomUserDetails customUserDetails = userDetailsService.loadUserByUsername(registerDto.getUsername());
+        log.info("Getting custom user details for username: {}", requestDto.getUsername());
+
+        CustomUserDetails customUserDetails = userDetailsService.loadUserByUsername(requestDto.getUsername());
 
         log.info("Generating access and refresh tokens");
 
@@ -130,5 +135,10 @@ public class AuthServiceImpl implements AuthService {
         log.info("Authentication was successfully got");
 
         return userAuthentication;
+    }
+
+    private MailDto constructMail(String email, String theme, String text){
+
+        return new MailDto(email, theme, text);
     }
 }
