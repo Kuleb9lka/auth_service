@@ -1,5 +1,6 @@
 package com.auth_service.dto;
 
+import com.auth_service.enums.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.time.Instant;
 @AllArgsConstructor
 public class ErrorResponse {
 
-    private String errorCode;
+    private ErrorCode errorCode;
 
     private String message;
 
