@@ -1,6 +1,6 @@
 package com.auth_service.exception.handler;
 
-import com.auth_service.dto.ExceptionResponseDto;
+import com.auth_service.dto.ErrorResponse;
 import com.auth_service.enums.ExceptionStatus;
 import com.auth_service.exception.InvalidRefreshTokenException;
 import com.auth_service.exception.mail_service.EmailNotFoundException;
@@ -15,54 +15,88 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.Instant;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidRefreshTokenException.class)
-    public ResponseEntity<ExceptionResponseDto> handleInvalidRefreshTokenException(InvalidRefreshTokenException exception) {
+    public ResponseEntity<ErrorResponse> handleInvalidRefreshTokenException(InvalidRefreshTokenException exception) {
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionResponseDto(ExceptionStatus.INVALID_REFRESH_TOKEN.name(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(
+                ExceptionStatus.INVALID_REFRESH_TOKEN.name(),
+                exception.getMessage(),
+                HttpStatus.UNAUTHORIZED.value(),
+                Instant.now()));
     }
 
     @ExceptionHandler(UserCredentialsConflictException.class)
-    public ResponseEntity<ExceptionResponseDto> handleRegistrationDetailsConflictException(UserCredentialsConflictException exception) {
+    public ResponseEntity<ErrorResponse> handleRegistrationDetailsConflictException(UserCredentialsConflictException exception) {
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ExceptionResponseDto(ExceptionStatus.USER_CREDENTIALS_CONFLICT.name(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(
+                ExceptionStatus.USER_CREDENTIALS_CONFLICT.name(),
+                exception.getMessage(),
+                HttpStatus.CONFLICT.value(),
+                Instant.now()));
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ExceptionResponseDto> handleUserNotFoundException(UserNotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException exception) {
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDto(ExceptionStatus.USER_NOT_FOUND.name(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(
+                ExceptionStatus.USER_NOT_FOUND.name(),
+                exception.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                Instant.now()));
     }
 
     @ExceptionHandler(EmailConfirmationTokenExpirationException.class)
-    public ResponseEntity<ExceptionResponseDto> handleEmailConfirmationTokenExpirationException(EmailConfirmationTokenExpirationException exception) {
+    public ResponseEntity<ErrorResponse> handleEmailConfirmationTokenExpirationException(EmailConfirmationTokenExpirationException exception) {
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDto(ExceptionStatus.USER_EMAIL_CONFIRMATION_TOKEN_EXPIRED.name(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(
+                ExceptionStatus.USER_EMAIL_CONFIRMATION_TOKEN_EXPIRED.name(),
+                exception.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                Instant.now()));
     }
 
     @ExceptionHandler(EmailAlreadyActivatedException.class)
-    public ResponseEntity<ExceptionResponseDto> handleEmailIsAlreadyActivatedException(EmailAlreadyActivatedException exception) {
+    public ResponseEntity<ErrorResponse> handleEmailIsAlreadyActivatedException(EmailAlreadyActivatedException exception) {
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDto(ExceptionStatus.EMAIL_IS_ALREADY_ACTIVATED.name(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(
+                ExceptionStatus.EMAIL_IS_ALREADY_ACTIVATED.name(),
+                exception.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                Instant.now()));
     }
 
     @ExceptionHandler(EmailNotFoundException.class)
-    public ResponseEntity<ExceptionResponseDto> handleEEmailNotFoundException(EmailNotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleEEmailNotFoundException(EmailNotFoundException exception) {
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDto(ExceptionStatus.EMAIL_NOT_FOUND.name(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(
+                ExceptionStatus.EMAIL_NOT_FOUND.name(),
+                exception.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                Instant.now()));
     }
 
     @ExceptionHandler(UserEmailConfirmationNotFoundException.class)
-    public ResponseEntity<ExceptionResponseDto> handleUserEmailConfirmationNotFoundException(UserEmailConfirmationNotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleUserEmailConfirmationNotFoundException(UserEmailConfirmationNotFoundException exception) {
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDto(ExceptionStatus.USER_EMAIL_CONFIRMATION_NOT_FOUND.name(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(
+                ExceptionStatus.USER_EMAIL_CONFIRMATION_NOT_FOUND.name(),
+                exception.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                Instant.now()));
     }
 
     @ExceptionHandler(UserServiceException.class)
-    public ResponseEntity<ExceptionResponseDto> handleUserServiceException(UserServiceException exception) {
+    public ResponseEntity<ErrorResponse> handleUserServiceException(UserServiceException exception) {
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponseDto(ExceptionStatus.USER_SERVICE_UNEXPECTED_ERROR.name(), exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(
+                ExceptionStatus.USER_SERVICE_UNEXPECTED_ERROR.name(),
+                exception.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                Instant.now()));
     }
 }
