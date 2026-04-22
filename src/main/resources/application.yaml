@@ -31,7 +31,11 @@ spring:
     topics:
       mailing: mailing
 
-
+grpc:
+  client:
+    user-service:
+      address: "discovery:///user-service"
+      negotiation-type: plaintext
 
 app:
   public-url: https://auth-service
