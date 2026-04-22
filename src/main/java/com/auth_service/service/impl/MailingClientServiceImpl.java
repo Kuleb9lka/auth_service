@@ -1,7 +1,7 @@
 package com.auth_service.service.impl;
 
 import com.auth_service.dto.MailDto;
-import com.auth_service.feign.MailingClient;
+import com.auth_service.client.feign.MailingClient;
 import com.auth_service.service.MailingClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
