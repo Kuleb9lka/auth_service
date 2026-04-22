@@ -3,6 +3,7 @@ package com.auth_service.security.service;
 import com.auth_service.constant.SecurityConstant;
 import com.auth_service.dto.security.CustomUserDetails;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -36,39 +38,38 @@ public class JwtService {
         return extractAllClaims(token).getSubject();
     }
 
-    private Date extractExpiration(String token) {
+    public boolean isTokenValid(String token) {
 
-        log.info("Expiration extraction");
+        try {
 
-        return Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY.getBytes())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration();
+            Claims allClaims = extractAllClaims(token);
+
+            return !allClaims.getExpiration().before(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+
+            return false;
+        }
     }
 
     private Claims extractAllClaims(String token) {
 
-        log.info("All claims extraction");
         return Jwts.parserBuilder()
-                .setSigningKey(getKey())
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
+    private Key getSigningKey() {
+        log.info("Entering getSigningKey() method");
+
+        SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+
+        log.info("Exit getSigningKey() method");
+        return secretKey;
+    }
+
     private Key getKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-    }
-
-    private boolean isTokenExpired(String token) {
-
-        log.info("Checking token expiration");
-        return extractExpiration(token).before(new Date());
-    }
-
-    public boolean isTokenValid(String token, CustomUserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 }
