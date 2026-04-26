@@ -1,9 +1,9 @@
 package com.auth_service.security.service.impl;
 
+import com.auth_service.client.UserClient;
 import com.auth_service.dto.UserAuthDto;
 import com.auth_service.exception.user_service.UserNotFoundException;
 import com.auth_service.dto.security.CustomUserDetails;
-import com.auth_service.service.UserClientService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.Collections;
 @Slf4j
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserClientService userClientService;
+    private final UserClient userClient;
 
 
     @Override
@@ -31,7 +31,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
             log.info("Trying to get user by username: {}", username);
 
-            byUsername = userClientService.getByUsername(username);
+            byUsername = userClient.getByUsername(username);
 
         } catch (FeignException.NotFound e) {
 

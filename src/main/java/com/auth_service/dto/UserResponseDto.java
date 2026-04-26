@@ -1,6 +1,7 @@
 package com.auth_service.dto;
 
 import com.auth_service.enums.UserRole;
+import com.auth_service.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,5 @@ public class UserResponseDto {
 
     private UserRole role;
 
-    private Boolean isActive;
+    private UserStatus status;
 }

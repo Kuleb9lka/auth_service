@@ -1,10 +1,10 @@
 package com.auth_service.controller;
 
+import com.auth_service.client.UserClient;
 import com.auth_service.dto.UserRequestDto;
 import com.auth_service.dto.security.AuthRequest;
 import com.auth_service.dto.security.AuthResponse;
 import com.auth_service.security.service.AuthService;
-import com.auth_service.service.UserClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    private final UserClientService userClientService;
+    private final UserClient userServiceClient;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> registration(@RequestBody UserRequestDto dto) {
@@ -45,6 +45,6 @@ public class AuthController {
     @GetMapping("/confirm-email")
     public void confirmEmail(@RequestParam("token") String token) {
 
-        userClientService.verifyUserEmail(token);
+        userServiceClient.verifyUserEmail(token);
     }
 }

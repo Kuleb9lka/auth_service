@@ -1,5 +1,6 @@
 package com.auth_service.security.service.impl;
 
+import com.auth_service.client.UserClient;
 import com.auth_service.constant.AuthConstant;
 import com.auth_service.constant.ExceptionConstant;
 import com.auth_service.dto.MailDto;
@@ -13,7 +14,6 @@ import com.auth_service.producer.MailProducer;
 import com.auth_service.security.service.AuthHelper;
 import com.auth_service.security.service.AuthService;
 import com.auth_service.security.service.JwtService;
-import com.auth_service.service.UserClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${jwt.refresh-expiration-time}")
     private Integer REFRESH_TOKEN_EXPIRATION_TIME;
-    private final UserClientService userClientService;
+    private final UserClient userClient;
 
     private final AuthHelper authHelper;
 
@@ -56,13 +56,13 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("Trying to create a user");
 
-        UserResponseDto createdUser = userClientService.createUser(requestDto);
+        UserResponseDto createdUser = userClient.create(requestDto);
 
         log.info("User was created successfully");
 
         log.info("Trying to generate confirmation token email: {}", createdUser.getEmail());
 
-        String emailVerificationToken = userClientService.generateEmailConfirmationToken(createdUser.getId());
+        String emailVerificationToken = userClient.generateEmailConfirmationToken(createdUser.getId());
 
         log.info("Confirmation token was successfully generated");
 
@@ -107,7 +107,7 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("Checking validity of refresh token for user: {}", extractedUsername);
 
-        if (!jwtService.isTokenValid(refreshToken, userDetailsByLogin)) {
+        if (!jwtService.isTokenValid(refreshToken)) {
             throw new InvalidRefreshTokenException(ExceptionConstant.INVALID_REFRESH_TOKEN);
         }
 
@@ -137,7 +137,7 @@ public class AuthServiceImpl implements AuthService {
         return userAuthentication;
     }
 
-    private MailDto constructMail(String email, String theme, String text){
+    private MailDto constructMail(String email, String theme, String text) {
 
         return new MailDto(email, theme, text);
     }

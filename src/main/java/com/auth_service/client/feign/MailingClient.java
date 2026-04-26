@@ -1,4 +1,4 @@
-package com.auth_service.feign;
+package com.auth_service.client.feign;
 
 import com.auth_service.dto.MailDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,6 +10,5 @@ public interface MailingClient {
 
     @PostMapping("/mailing/sender")
     void sendMail(@RequestBody MailDto dto);
-
 
 }
