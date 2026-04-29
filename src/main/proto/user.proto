@@ -77,3 +77,21 @@ message ConfirmationToken {
 
   string token = 1;
 }
+
+message ErrorInfo {
+
+  ErrorCode error_code= 1;
+
+  string message = 2;
+}
+
+enum ErrorCode {
+
+  ERROR_CODE_UNSPECIFIED = 0;
+  USER_NOT_FOUND = 1;
+  EMAIL_ALREADY_ACTIVATED = 2;
+  EMAIL_ALREADY_EXIST = 3;
+  USERNAME_ALREADY_EXIST = 4;
+  USER_EMAIL_CONFIRMATION_NOT_FOUND = 5;
+  USER_EMAIL_CONFIRMATION_TOKEN_EXPIRED = 6;
+}
