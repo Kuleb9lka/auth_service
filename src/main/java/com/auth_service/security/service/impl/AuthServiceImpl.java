@@ -68,10 +68,12 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("Trying to send confirmation mail");
 
+        String url = authHelper.constructEmailConfirmationUrl(emailVerificationToken);
+
         mailProducer.sendMail(constructMail(
                 createdUser.getEmail(),
                 AuthConstant.REGISTRATION_THEME,
-                authHelper.constructEmailTextWithUrl(AuthConstant.REGISTRATION_MAIL_TEXT, emailVerificationToken)));
+                authHelper.constructEmailTextWithUrl(AuthConstant.REGISTRATION_MAIL_TEXT, url)));
 
         log.info("Confirmation mail was successfully sent");
 
